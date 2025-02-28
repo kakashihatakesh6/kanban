@@ -1,0 +1,704 @@
+.body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  height: 100vh;
+  /* background: linear-gradient(135deg, #d90fb1, #1d4ca1); */
+}
+
+/* #app {
+  display: flex;
+  width: 25%;
+  max-width: 250px;
+} */
+
+textarea:focus-visible {
+  outline: none;
+}
+
+.sidebar {
+  width: 100%;
+  background-color: white;
+  padding: 16px;
+  border-right: 1px solid #ddd;
+}
+
+.tool-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  place-items: center;
+}
+
+.tool-button {
+  border: 2px solid;
+  border-radius: 4px;
+  background-color: rgba(217, 15, 177, 0.9);
+  color: #000;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-button.h-gate {
+  background-color: #aabfff;
+  border-color: #4a61a1;
+}
+
+.tool-button.t-gate {
+  background-color: #aabfff;
+  border-color: #4a61a1;
+}
+
+.tool-button.td-gate {
+  background-color: #aabfff;
+  border-color: #4a61a1;
+}
+
+.tool-button.x-gate {
+  background-color: #e6e6fa;
+  border-color: #4682b4;
+}
+
+.tool-button.y-gate {
+  background-color: #e6e6fa;
+  border-color: #4682b4;
+}
+
+.tool-button.z-gate {
+  background-color: #e6e6fa;
+  border-color: #4682b4;
+}
+
+.tool-button.sqrtx-gate {
+  background-color: #c1d2ff;
+  border-color: #384a7d;
+}
+
+.tool-button.sqrtz-gate {
+  background-color: #c1d2ff;
+  border-color: #384a7d;
+}
+
+.tool-button.cnot-gate {
+  background-color: #c1d2ff;
+  border-color: #384a7d;
+}
+
+/* .qubit .tool-button.cnot-gate {
+height: 90px;
+position: absolute;
+z-index: 10;
+} */
+
+.dashed-line {
+  width: 1px;
+  /* Thickness of the line */
+  height: 90%;
+  /* Full height (adjust as needed) */
+  background-image: linear-gradient(
+    to bottom,
+    transparent 5px,
+    rgba(255, 255, 255, 0.8) 5px,
+    rgba(255, 255, 255, 0.8) 15px,
+    transparent 15px
+  );
+  background-size: 2px 10px;
+  /* Dash width and gap (adjust as needed) */
+  display: block;
+}
+
+.tool-button.rx-gate {
+  background-color: #ecf2ff;
+  border-color: #1f294a;
+  font-size: 11px;
+}
+
+.tool-button.ry-gate {
+  background-color: #ecf2ff;
+  border-color: #1f294a;
+  font-size: 11px;
+}
+
+.tool-button.rz-gate {
+  background-color: #ecf2ff;
+  border-color: #1f294a;
+  font-size: 11px;
+}
+
+.tool-button.measure-gate {
+  background-color: #fafcff;
+  border-color: #0e1223;
+}
+
+.tool-button.i-gate {
+  background-color: #fafcff;
+  border-color: #0e1223;
+}
+
+.tool-button.barrier-gate {
+  background-color: #fafcff;
+  border-color: #0e1223;
+}
+
+.tool-button.s-gate {
+  background-color: #f5f9ff;
+  border-color: #151c33;
+}
+
+.tool-button.sdg-gate {
+  background-color: #f5f9ff;
+  border-color: #151c33;
+}
+
+.tool-button.reset-gate {
+  background-color: #f5f9ff;
+  border-color: #151c33;
+}
+
+.tool-button.h-gate:hover {
+  background-color: #4a61a1;
+  color: #fff;
+}
+
+.tool-button.h-gate.hover {
+  background-color: #4a61a1;
+  color: #fff;
+}
+
+.tool-button.t-gate:hover {
+  background-color: #4a61a1;
+  color: #fff;
+}
+
+.tool-button.t-gate.hover {
+  background-color: #4a61a1;
+  color: #fff;
+}
+
+.tool-button.td-gate:hover {
+  background-color: #4a61a1;
+  color: #fff;
+}
+
+.tool-button.td-gate.hover {
+  background-color: #4a61a1;
+  color: #fff;
+}
+
+.tool-button.x-gate:hover {
+  background-color: #4682b4;
+  color: #fff;
+}
+
+.tool-button.x-gate.hover {
+  background-color: #4682b4;
+  color: #fff;
+}
+
+.tool-button.y-gate:hover {
+  background-color: #4682b4;
+  color: #fff;
+}
+
+.tool-button.y-gate.hover {
+  background-color: #4682b4;
+  color: #fff;
+}
+
+.tool-button.z-gate:hover {
+  background-color: #4682b4;
+  color: #fff;
+}
+
+.tool-button.z-gate.hover {
+  background-color: #4682b4;
+  color: #fff;
+}
+
+.tool-button.sqrtx-gate:hover {
+  background-color: #384a7d;
+  color: #fff;
+}
+
+.tool-button.sqrtx-gate.hover {
+  background-color: #384a7d;
+  color: #fff;
+}
+
+.tool-button.sqrtz-gate:hover {
+  background-color: #384a7d;
+  color: #fff;
+}
+
+.tool-button.sqrtz-gate.hover {
+  background-color: #384a7d;
+  color: #fff;
+}
+
+.tool-button.cnot-gate:hover {
+  background-color: #384a7d;
+  color: #fff;
+}
+
+.tool-button.cnot-gate.hover {
+  background-color: #384a7d;
+  color: #fff;
+}
+
+.tool-button.rx-gate:hover {
+  background-color: #1f294a;
+  color: #fff;
+}
+
+.tool-button.rx-gate.hover {
+  background-color: #1f294a;
+  color: #fff;
+}
+
+.tool-button.ry-gate:hover {
+  background-color: #1f294a;
+  color: #fff;
+}
+
+.tool-button.ry-gate.hover {
+  background-color: #1f294a;
+  color: #fff;
+}
+
+.tool-button.rz-gate:hover {
+  background-color: #1f294a;
+  color: #fff;
+}
+
+.tool-button.rz-gate.hover {
+  background-color: #1f294a;
+  color: #fff;
+}
+
+.tool-button.measure-gate:hover {
+  background-color: #0e1223;
+  color: #fff;
+}
+
+.tool-button.measure-gate.hover {
+  background-color: #0e1223;
+  color: #fff;
+}
+
+.tool-button.i-gate:hover {
+  background-color: #0e1223;
+  color: #fff;
+}
+
+.tool-button.i-gate.hover {
+  background-color: #0e1223;
+  color: #fff;
+}
+
+.tool-button.barrier-gate:hover {
+  background-color: #0e1223;
+  color: #fff;
+}
+
+.tool-button.barrier-gate.hover {
+  background-color: #0e1223;
+  color: #fff;
+}
+
+.tool-button.s-gate:hover {
+  background-color: #151c33;
+  color: #fff;
+}
+
+.tool-button.s-gate.hover {
+  background-color: #151c33;
+  color: #fff;
+}
+
+.tool-button.sdg-gate:hover {
+  background-color: #151c33;
+  color: #fff;
+}
+
+.tool-button.sdg-gate.hover {
+  background-color: #151c33;
+  color: #fff;
+}
+
+.tool-button.reset-gate:hover {
+  background-color: #151c33;
+  color: #fff;
+}
+
+.tool-button.reset-gate.hover {
+  background-color: #151c33;
+  color: #fff;
+}
+
+.main-container {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: white;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.header h1 {
+  margin: 0;
+  color: #ffd700;
+}
+
+.add-qubit,
+.remove-qubit,
+.export-circuit,
+.import-circuit,
+.delete-circuit,
+.delete-qubit {
+  padding: 10px;
+  border: 1px solid #ffd700;
+  border-radius: 4px;
+  background-color: #ffd700;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add-qubit:hover,
+.remove-qubit:hover,
+.export-circuit:hover,
+.import-circuit,
+.delete-circuit,
+.delete-qubit {
+  background-color: #ffb700;
+}
+
+/* circuit space */
+
+/* .circuit-container::before{
+  content: '';
+  width: 98%;
+  height: 1px;
+  background-color: #888888;
+  position: absolute;
+  left:40px;
+  z-index: 2;
+} */
+
+.circuit-container #circuit-diagram {
+  overflow-x: auto;
+  white-space: wrap;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.circuit-container .qubit {
+  display: flex;
+  align-items: center;
+  min-height: 45px;
+  gap: 10px;
+  position: relative;
+}
+
+.circuit-container .qubit::before {
+  content: "";
+  width: 100%;
+  height: 0.75px;
+  background-color: #dbdbdb;
+  position: absolute;
+  left: 60px;
+}
+
+.qubit .button-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  /* Enable horizontal scrolling */
+  flex-wrap: nowrap;
+  /* Prevent wrapping onto multiple lines */
+  padding-bottom: 10px;
+  /* display: flex;
+  align-items: center;
+  min-width: 100%;
+  gap: 10px; */
+}
+
+.qubit .tool-button {
+  padding: 5px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+  z-index: 10;
+  flex-shrink: 0;
+  min-width: 40px;
+}
+
+.qasm-container {
+  background-color: #fff;
+  max-height: 28rem;
+  height: 100%;
+}
+
+/* 
+.qasm-container pre {
+margin: 0;
+font-family: monospace;
+background-color: #fafcff;
+padding: 10px;
+border-radius: 4px;
+} */
+
+.hist-bloch-container {
+  display: flex;
+  gap: 20px;
+  flex-direction: row;
+}
+
+.histogram-container canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.dropdown {
+  position: relative;
+}
+
+#qubit-dropdown {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  background-color: #cb2e92;
+  /* Set the background color of the dropdown */
+  color: white;
+  /* Set the text color of the dropdown */
+  /* Center dropdown */
+  /* display: block;
+  margin: 10px auto; */
+}
+
+#qubit-dropdown-container {
+  text-align: center;
+}
+
+#qubit-dropdown option {
+  background-color: #cb2e92;
+  color: white;
+}
+
+#bloch-rotation-toogle {
+  display: flex;
+  align-items: center;
+  /* Center vertically */
+}
+
+#bloch-container {
+  position: relative;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+#bloch-sphere-container {
+  position: relative;
+  height: fit-content;
+  width: fit-content;
+  margin: auto;
+}
+
+#bloch-sphere-container canvas {
+  background-color: black;
+  max-width: 450px;
+  max-height: 35vh;
+  overflow-y: auto;
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 0.95;
+  margin: auto;
+}
+
+#bloch-sphere-container #labels {
+  width: 100% !important;
+}
+
+.dropdown .tool-button.rx-gate.ry-gate.rz-gate {
+  display: block;
+  padding: 10px;
+  background-color: #ffd700;
+  border: 1px solid #ffd700;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  font-size: 16px;
+}
+
+.dropdown .tool-button:hover {
+  background-color: #ffb700;
+}
+
+.dropdown-item {
+  padding: 5px;
+  border: 2px solid;
+  border-radius: 4px;
+  background-color: #ecf2ff;
+  border-color: #1f294a;
+  color: #000;
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-item:hover {
+  background-color: #060af3f0;
+  color: #fff;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  bottom: 50%;
+  left: 2px;
+  transform: translate(10%, 50%);
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translate(26px, 50%);
+  -ms-transform: translate(26px, 50%);
+  transform: translate(26px, 50%);
+}
+
+/* Rounded sliders */
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.dragging {
+  overflow: hidden;
+  background: #000;
+}
+
+.matrix-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+.matrix {
+  display: inline-grid;
+  grid-template-columns: repeat(2, auto);
+  grid-gap: 3px;
+  font-family: monospace;
+  font-size: 16px;
+}
+
+.row {
+  display: contents;
+}
+
+.element {
+  padding: 2px 4px;
+  border: 1px solid #ccc;
+}
+
+.export-options {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: linear-gradient(to right, #ff69b4, #add8e6);
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(3, 85, 200, 0.759);
+  z-index: 1;
+}
+
+.dropdown-content button {
+  color: rgb(7, 100, 248);
+  padding: 12px 16px;
+  text-decoration-color: #060af3f0;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content button:hover {
+  background-color: #07caf1;
+  color: #c71dd7;
+}
+
+.export-options:hover .dropdown-content {
+  display: grid;
+}
