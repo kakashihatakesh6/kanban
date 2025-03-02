@@ -23,10 +23,10 @@ export function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
       {/* Edit and Delete Icons */}
       <div className="absolute top-2 right-2 flex space-x-2">
         <button onClick={() => onEdit(task)} className="text-gray-500 hover:text-blue-600">
-          <Edit size={16} />
+          <Edit size={18} />
         </button>
         <button onClick={() => onDelete(task)} className="text-gray-500 hover:text-red-600">
-          <Trash2 size={16} />
+          <Trash2 size={18} />
         </button>
       </div>
 
