@@ -33,12 +33,12 @@ export async function updateTaskStatus(
     await delay(500)
 
     // In a real app, you would make a PUT/PATCH request
-    // const response = await fetch(`/api/tasks/${taskId}`, {
-    //   method: 'PATCH',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ status: newStatus })
-    // });
-    // if (!response.ok) throw new Error('Failed to update task status');
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/${taskId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus })
+    });
+    if (!response.ok) throw new Error('Failed to update task status');
 
     console.log(`Task ${taskId} status updated to ${newStatus}`)
   } catch (error) {

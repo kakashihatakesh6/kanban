@@ -7,7 +7,7 @@ import { Calendar, Home, LayoutDashboard, LogOut, Menu, MessageSquare, Plus, Set
 
 import type { KanbanData, Task } from "../../interfaces/types"
 import { initialData } from "../../interfaces/dummydata"
-import { updateTaskStatus, createTask } from "../../api/api"
+import { updateTaskStatus } from "../../api/api"
 import { SidebarItem } from "@/components/kanban/sidebar-item"
 import { AddTaskModal } from "@/components/kanban/add-task-modal"
 import { TaskCard } from "@/components/kanban/task-card" 
@@ -181,36 +181,81 @@ export default function KanbanBoard() {
         setIsAddTaskModalOpen(true)
     }
 
+    // const handleAddTask = async (taskData: Omit<Task, "_id">) => {
+    //     try {
+    //         // Create task on the server and get the new ID
+    //         const newTaskId = await createTask(taskData)
+
+    //         // Create a new task object with the ID
+    //         const newTask: Task = {
+    //             _id: newTaskId,
+    //             ...taskData,
+    //         }
+
+    //         // Update our local state
+    //         const newData = { ...data }
+
+    //         // Add the task to our tasks object
+    //         newData.tasks[newTaskId] = newTask
+
+    //         // Add the task ID to the appropriate column
+    //         const columnId = getColumnIdFromStatus(taskData.status)
+    //         newData.columns[columnId].taskIds.push(newTaskId)
+
+    //         // Update state
+    //         setData(newData)
+
+    //         return Promise.resolve()
+    //     } catch (err) {
+    //         console.error("Failed to add task:", err)
+    //         return Promise.reject(err)
+    //     }
+    // }
+
     const handleAddTask = async (taskData: Omit<Task, "_id">) => {
         try {
-            // Create task on the server and get the new ID
-            const newTaskId = await createTask(taskData)
-
+            // Make an API call to create the task on the server
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(taskData),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Failed to create task");
+            }
+    
+            const newDBTask = await response.json(); // Assuming the response returns the new task ID
+            console.log("new tak =>", newDBTask)
             // Create a new task object with the ID
             const newTask: Task = {
-                _id: newTaskId,
+                _id: newDBTask._id,
                 ...taskData,
-            }
-
+            };
+    
             // Update our local state
-            const newData = { ...data }
-
-            // Add the task to our tasks object
-            newData.tasks[newTaskId] = newTask
-
-            // Add the task ID to the appropriate column
-            const columnId = getColumnIdFromStatus(taskData.status)
-            newData.columns[columnId].taskIds.push(newTaskId)
-
-            // Update state
-            setData(newData)
-
-            return Promise.resolve()
+            setData((prevData) => {
+                const newData = { ...prevData };
+    
+                // Add the task to our tasks object
+                newData.tasks[newDBTask._id] = newTask;
+    
+                // Add the task ID to the appropriate column
+                const columnId = getColumnIdFromStatus(taskData.status);
+                newData.columns[columnId].taskIds.push(newDBTask._id);
+    
+                return newData;
+            });
+    
+            return Promise.resolve();
         } catch (err) {
-            console.error("Failed to add task:", err)
-            return Promise.reject(err)
+            console.error("Failed to add task:", err);
+            return Promise.reject(err);
         }
-    }
+    };
+    
 
     // Helper function to get column ID from status
     const getColumnIdFromStatus = (status: "To Do" | "In Progress" | "Completed"): string => {
