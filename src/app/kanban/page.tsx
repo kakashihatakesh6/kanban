@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
@@ -5,12 +6,13 @@ import { useState, useEffect } from "react"
 import { DragDropContext, Droppable, Draggable, type DropResult } from "react-beautiful-dnd"
 import { Calendar, Home, LayoutDashboard, LogOut, Menu, MessageSquare, Plus, Settings, User, X } from "lucide-react"
 
-import type { KanbanData, Task } from "../../interfaces/types"
+import type { KanbanData, Task, TaskData } from "../../interfaces/types"
 import { initialData } from "../../interfaces/dummydata"
-import { updateTaskStatus } from "../../api/api"
+import { deleteTask, updateDBTask, updateTaskStatus } from "../../api/api"
 import { SidebarItem } from "@/components/kanban/sidebar-item"
 import { AddTaskModal } from "@/components/kanban/add-task-modal"
-import { TaskCard } from "@/components/kanban/task-card" 
+import { TaskCard } from "@/components/kanban/task-card"
+import { Modal } from "@/components/modal"
 
 
 export default function KanbanBoard() {
@@ -20,6 +22,7 @@ export default function KanbanBoard() {
     const [error, setError] = useState<string | null>(null)
     const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
     const [activeColumn, setActiveColumn] = useState<string>("column-1")
+    const [refetchData, setRefetchData] = useState(false)
     // console.log(first)
 
 
@@ -83,7 +86,7 @@ export default function KanbanBoard() {
         }
 
         loadData()
-    }, [])
+    }, [refetchData])
 
     const onDragEnd = async (result: DropResult) => {
         const { destination, source, draggableId } = result
@@ -222,11 +225,11 @@ export default function KanbanBoard() {
                 },
                 body: JSON.stringify(taskData),
             });
-    
+
             if (!response.ok) {
                 throw new Error("Failed to create task");
             }
-    
+
             const newDBTask = await response.json(); // Assuming the response returns the new task ID
             console.log("new tak =>", newDBTask)
             // Create a new task object with the ID
@@ -234,28 +237,28 @@ export default function KanbanBoard() {
                 _id: newDBTask._id,
                 ...taskData,
             };
-    
+
             // Update our local state
             setData((prevData) => {
                 const newData = { ...prevData };
-    
+
                 // Add the task to our tasks object
                 newData.tasks[newDBTask._id] = newTask;
-    
+
                 // Add the task ID to the appropriate column
                 const columnId = getColumnIdFromStatus(taskData.status);
                 newData.columns[columnId].taskIds.push(newDBTask._id);
-    
+
                 return newData;
             });
-    
+
             return Promise.resolve();
         } catch (err) {
             console.error("Failed to add task:", err);
             return Promise.reject(err);
         }
     };
-    
+
 
     // Helper function to get column ID from status
     const getColumnIdFromStatus = (status: "To Do" | "In Progress" | "Completed"): string => {
@@ -271,6 +274,41 @@ export default function KanbanBoard() {
         }
     }
 
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    const handleEdit = (task: Task) => {
+        setSelectedTask(task);
+        setIsEditModalOpen(true);
+    };
+
+    const handleDelete = async (task: Task) => {
+        setSelectedTask(task || null);
+        // await deleteTask(taskId)
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        //   if (selectedTask) {
+        //     setTasks(tasks.filter((task) => task._id !== selectedTask._id));
+        //   }
+        await deleteTask(selectedTask?._id)
+        setIsDeleteModalOpen(false);
+        setRefetchData(!refetchData)
+    };
+
+    const confirmEdit = async (updatedTask: Task) => {
+        await updateDBTask(updatedTask)
+        setIsEditModalOpen(false);
+        setRefetchData(!refetchData)
+    };
+
+
+
+
+
+
     return (
         <div className="flex h-screen bg-gray-50">
             {/* Sidebar */}
@@ -280,7 +318,7 @@ export default function KanbanBoard() {
                 <div className="p-4 flex items-center justify-between border-b border-indigo-800">
                     <h1 className={`font-bold text-xl ${!sidebarOpen && "hidden"}`}>KanbanBoard</h1>
                     <button onClick={toggleSidebar} className="p-1 rounded-md hover:bg-indigo-800">
-                        {sidebarOpen ? <X size={20} /> : <Menu size={20} />} 
+                        {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
                 </div>
 
@@ -394,7 +432,62 @@ export default function KanbanBoard() {
                                                                             {...provided.dragHandleProps}
                                                                             className={snapshot.isDragging ? "shadow-md" : ""}
                                                                         >
-                                                                            <TaskCard task={task} />
+                                                                            <TaskCard key={task._id} task={task} onEdit={handleEdit} onDelete={handleDelete} />
+
+                                                                            {/* Edit Modal */}
+                                                                            {isEditModalOpen && selectedTask && (
+                                                                                <Modal
+                                                                                    title="Edit Task"
+                                                                                    onClose={() => setIsEditModalOpen(false)}
+                                                                                    onConfirm={() => confirmEdit(selectedTask)}
+                                                                                >
+                                                                                    <div className="space-y-4">
+                                                                                        {/* Task Title */}
+                                                                                        <div>
+                                                                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                                                Task Title
+                                                                                            </label>
+                                                                                            <input
+                                                                                                type="text"
+                                                                                                className="mt-1 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 p-2 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500"
+                                                                                                placeholder="Enter task title"
+                                                                                                value={selectedTask?.title || ""}
+                                                                                                onChange={(e) =>
+                                                                                                    setSelectedTask((prev) => (prev ? { ...prev, title: e.target.value } : null))
+                                                                                                }
+                                                                                            />
+                                                                                        </div>
+
+                                                                                        {/* Task Description */}
+                                                                                        <div>
+                                                                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                                                Description
+                                                                                            </label>
+                                                                                            <textarea
+                                                                                                className="mt-1 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 p-2 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500"
+                                                                                                placeholder="Enter task description"
+                                                                                                value={selectedTask?.description || ""}
+                                                                                                onChange={(e) =>
+                                                                                                    setSelectedTask((prev) => (prev ? { ...prev, description: e.target.value } : null))
+                                                                                                }
+                                                                                            />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </Modal>
+                                                                            )}
+
+                                                                            {/* Delete Confirmation Modal */}
+                                                                            {isDeleteModalOpen && (
+                                                                                <Modal
+                                                                                    title="Delete Task"
+                                                                                    onClose={() => setIsDeleteModalOpen(false)}
+                                                                                    onConfirm={confirmDelete}
+                                                                                >
+                                                                                    <p>Are you sure you want to delete this task?</p>
+                                                                                </Modal>
+                                                                            )}
+
+
                                                                         </div>
                                                                     )}
                                                                 </Draggable>

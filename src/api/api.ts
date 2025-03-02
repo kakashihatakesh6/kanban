@@ -1,4 +1,4 @@
-import type { KanbanData } from "../interfaces/types"
+import type { KanbanData, Task} from "../interfaces/types"
 import { initialData } from "../interfaces/dummydata"
 
 // Simulate API calls with a delay
@@ -70,6 +70,52 @@ export async function createTask(taskData: Omit<KanbanData["tasks"][string], "_i
     return newId
   } catch (error) {
     console.error("Error creating task:", error)
+    throw error
+  }
+}
+
+// Delete task on the server
+export async function deleteTask(
+  taskId?: string
+): Promise<void> {
+  try {
+    // Simulate API call
+    await delay(500)
+
+    // In a real app, you would make a PUT/PATCH request
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/${taskId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
+    });
+    if (!response.ok) throw new Error('Failed to update task status');
+
+    console.log(`Task ${taskId} deleted!`)
+  } catch (error) {
+    console.error("Error updating task status:", error)
+    throw error
+  }
+}
+
+// Update task on the server
+export async function updateDBTask(
+  task: Task
+): Promise<void> {
+  try {
+    // Simulate API call
+    await delay(500)
+
+    // In a real app, you would make a PUT/PATCH request
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/${task._id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(task)
+    });
+    if (!response.ok) throw new Error('Failed to update task status');
+
+    console.log(`Task ${task._id} updated!`)
+  } catch (error) {
+    console.error("Error updating task status:", error)
     throw error
   }
 }

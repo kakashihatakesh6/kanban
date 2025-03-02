@@ -26,4 +26,7 @@ export interface Task {
     columnOrder: string[]
   }
   
-  
+  export interface TaskData {
+    title: string,
+    description: string
+  }
